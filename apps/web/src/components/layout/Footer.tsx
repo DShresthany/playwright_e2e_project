@@ -62,8 +62,23 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-8 pt-8 border-t border-slate-800 text-center text-sm">
+        <div className="mt-8 pt-8 border-t border-slate-800 text-center text-sm space-y-1">
           <p>&copy; {new Date().getFullYear()} QA Demo. Built for testing purposes.</p>
+          <p>
+            Developed by{' '}
+            <a
+              href="https://ManiG.dev"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-brand-400 hover:text-brand-300 transition-colors"
+              aria-label="Visit ManiG's website"
+              data-testid="footer-manig-link"
+            >
+              ManiG
+            </a>
+            {' '}with{' '}
+            <span className="text-red-500" aria-label="love" role="img">❤</span>
+          </p>
         </div>
       </div>
     </footer>

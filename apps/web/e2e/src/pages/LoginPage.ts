@@ -8,6 +8,8 @@ export class LoginPage extends BasePage {
   readonly usernameInput: Locator;
   readonly passwordInput: Locator;
   readonly submitButton: Locator;
+  readonly errorAlert: Locator;
+  readonly errorMessage: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -17,6 +19,8 @@ export class LoginPage extends BasePage {
     this.usernameInput = page.getByTestId('username-input');
     this.passwordInput = page.getByTestId('password-input');
     this.submitButton = page.getByTestId('login-submit-button');
+    this.errorAlert = page.getByTestId('login-error');
+    this.errorMessage = page.getByTestId('login-error-message');
   }
 
   async goto(): Promise<void> {

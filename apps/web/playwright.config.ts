@@ -12,13 +12,26 @@ export default defineConfig({
     baseURL: 'http://localhost:5173',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
+    ...devices['Desktop Chrome'],
+    channel: 'chrome',
   },
   projects: [
     {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'],
-        channel: 'chrome',
-       },
+      name: 'setup',
+      testDir: './e2e/setup',
+      testMatch: /.*\.setup\.ts/,
+    },
+    {
+      name: 'unauthenticated',
+    },
+    {
+      name: 'authenticated',      
+      testDir: './e2e/tests',
+      testIgnore: /auth\/.*/,
+      dependencies: ['setup'],
+      use: {
+        storageState: 'e2e/.auth/standard.json',
+      },
     },
   ],
   webServer: [

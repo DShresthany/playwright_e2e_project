@@ -23,12 +23,14 @@ export default defineConfig({
     },
     {
       name: 'unauthenticated',
+      testMatch: /auth\/.*|catalog\/catalog\.spec\.ts/,
     },
     {
       name: 'authenticated',      
       testDir: './e2e/tests',
-      testIgnore: /auth\/.*/,
+      testIgnore: /auth\/.*|catalog\/catalog\.spec\.ts/,
       dependencies: ['setup'],
+      workers: 1,
       use: {
         storageState: 'e2e/.auth/standard.json',
       },

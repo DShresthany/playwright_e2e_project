@@ -23,12 +23,13 @@ export default defineConfig({
     },
     {
       name: 'unauthenticated',
-      testMatch: /auth\/.*|catalog\/catalog\.spec\.ts/,
+      testDir: './e2e/tests/unauthenticated',
+      testMatch: /.*\.spec\.ts/,
     },
     {
-      name: 'authenticated',      
-      testDir: './e2e/tests',
-      testIgnore: /auth\/.*|catalog\/catalog\.spec\.ts/,
+      name: 'authenticated',
+      testDir: './e2e/tests/authenticated',
+      testMatch: /.*\.spec\.ts/,
       dependencies: ['setup'],
       workers: 1,
       use: {

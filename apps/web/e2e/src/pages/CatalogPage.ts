@@ -125,18 +125,36 @@ export class CatalogPage extends BasePage {
    * Finds the first card whose Add button is enabled (may include low-stock).
    * Prefer for authenticated add/remove flows when any purchasable card works.
    */
-  async findEnabledAddCard(): Promise<CatalogCard> {
+  async findEnabledAddCard(excludeIds: string[] = []): Promise<CatalogCard> {
     const addButtons = this.page.getByRole('button', { name: /^Add .+ to cart$/ });
     await expect(addButtons.first()).toBeVisible();
     const count = await addButtons.count();
     for (let i = 0; i < count; i++) {
       const button = addButtons.nth(i);
-      if (await button.isEnabled()) {
-        const id = this.idFromAddTestId(await button.getAttribute('data-testid'));
-        return this.cardDetails(id);
+      if (!(await button.isEnabled())) {
+        continue;
       }
+      const id = this.idFromAddTestId(await button.getAttribute('data-testid'));
+      if (excludeIds.includes(id)) {
+        continue;
+      }
+      return this.cardDetails(id);
     }
     throw new Error('No catalog card with enabled Add');
+  }
+
+  /**
+   * Clicks catalog-card Add for an enabled product. Arrangement only —
+   * not a cart-page assertion.
+   */
+  async addEnabledProductToCart(excludeIds: string[] = []): Promise<CatalogCard> {
+    const card = await this.findEnabledAddCard(excludeIds);
+    await this.addToCartButton(card.id).click();
+    await expect(
+      this.inCartActions(card.id),
+      { message: `Precondition Failed: catalog Add should show In Cart for product ${card.id}` },
+    ).toBeVisible();
+    return card;
   }
 
   /**

@@ -1,0 +1,76 @@
+name: E2E
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+defaults:
+  run:
+    working-directory: apps/web
+
+jobs:
+  playwright:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    env:
+      CI: true
+      STANDARD_USER: ${{ secrets.STANDARD_USER }}
+      STANDARD_PASSWORD: ${{ secrets.STANDARD_PASSWORD }}
+      LOCKED_USER: ${{ secrets.LOCKED_USER }}
+      LOCKED_PASSWORD: ${{ secrets.LOCKED_PASSWORD }}
+      ADMIN_USER: ${{ secrets.ADMIN_USER }}
+      ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        working-directory: .
+
+      - name: Verify required secrets are configured
+        run: |
+          for var in STANDARD_USER STANDARD_PASSWORD LOCKED_USER LOCKED_PASSWORD ADMIN_USER ADMIN_PASSWORD JWT_SECRET; do
+            if [ -z "${!var}" ]; then
+              echo "::error::Missing GitHub secret: $var"
+              exit 1
+            fi
+          done
+        env:
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+
+      - name: Create Wrangler dev secrets
+        run: |
+          cat > .dev.vars <<EOF
+          JWT_SECRET=${{ secrets.JWT_SECRET }}
+          ENVIRONMENT=development
+          EOF
+
+      - name: Seed local D1 database
+        run: pnpm exec wrangler d1 execute qademo-db --local --file=./schema.sql
+
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Run E2E tests
+        run: pnpm exec playwright test
+
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: apps/web/playwright-report/
+          retention-days: 7

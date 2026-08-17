@@ -1,5 +1,5 @@
 // spec: specs/ecommerce-catalog.md
-import { test, expect } from '../../src/fixtures/base';
+import { test, expect } from '../../../src/fixtures/base';
 
 test.describe('Catalog', { tag: '@catalog' }, () => {
   test('catalog-loads-heading-grid-and-count', { tag: ['@smoke', '@critical'] }, async ({ catalogPage, page }) => {

@@ -1,6 +1,6 @@
 // spec: specs/ecommerce-login.md
-import { test, expect } from '../../src/fixtures/base';
-import { requireEnvCredentials } from '../../src/helpers/credentials';
+import { test, expect } from '../../../src/fixtures/base';
+import { requireEnvCredentials } from '../../../src/helpers/credentials';
 
 test.describe('Login', { tag: '@login' }, () => {
   test.beforeEach(async ({ loginPage }) => {

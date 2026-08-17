@@ -1,6 +1,6 @@
 // spec: specs/ecommerce-catalog.md
-import { test, expect } from '../../src/fixtures/base';
-import { clearCartViaApi } from '../../src/helpers/cart';
+import { test, expect } from '../../../src/fixtures/base';
+import { clearCartViaApi } from '../../../src/helpers/cart';
 
 test.describe('Catalog card cart', { tag: '@catalog' }, () => {
   test.beforeEach(async ({ catalogPage, page, request }) => {

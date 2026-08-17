@@ -59,14 +59,12 @@ jobs:
       - name: Seed local D1 database
         run: pnpm exec wrangler d1 execute qademo-db --local --file=./schema.sql
 
-      - name: Build frontend for Wrangler assets
-        run: pnpm run build:frontend  
-
       - name: Install Playwright browsers
         run: pnpm exec playwright install --with-deps chromium
 
       - name: Run E2E tests
-        run: pnpm exec playwright test
+        run: pnpm run test:e2e
+        working-directory: .
 
       - name: Upload Playwright report
         if: failure()
@@ -75,3 +73,4 @@ jobs:
           name: playwright-report
           path: apps/web/playwright-report/
           retention-days: 7
+          

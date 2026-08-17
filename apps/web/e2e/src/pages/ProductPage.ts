@@ -8,6 +8,7 @@ export class ProductPage extends BasePage {
   readonly notFound: Locator;
   readonly notFoundHeading: Locator;
   readonly backToCatalogButton: Locator;
+  readonly stockBadge: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -17,6 +18,18 @@ export class ProductPage extends BasePage {
     this.notFound = page.getByTestId('product-not-found');
     this.notFoundHeading = page.getByTestId('product-not-found-heading');
     this.backToCatalogButton = page.getByTestId('product-not-found-back-button');
+    this.stockBadge = page.getByText(/\d+ in stock/);
+  }
+
+  /** Parses the leading integer from "{N} in stock" on the PDP. */
+  async parseInStockCount(): Promise<number> {
+    await this.stockBadge.waitFor({ state: 'visible' });
+    const text = await this.stockBadge.textContent();
+    const match = text?.match(/(\d+)/);
+    if (!match) {
+      throw new Error(`Precondition Failed: could not parse stock from "${text}"`);
+    }
+    return Number(match[1]);
   }
 
   /** Opens /catalog (PDP is usually reached via a catalog product link). */

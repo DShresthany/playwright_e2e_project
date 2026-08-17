@@ -1,6 +1,15 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "globalDependencies": ["**/.env.*local"],
+  "globalEnv": [
+    "CI",
+    "STANDARD_USER",
+    "STANDARD_PASSWORD",
+    "LOCKED_USER",
+    "LOCKED_PASSWORD",
+    "ADMIN_USER",
+    "ADMIN_PASSWORD"
+  ],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],

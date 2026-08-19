@@ -10,7 +10,7 @@ export default defineConfig({
   reporter: process.env.CI ? [['html'], ['github']] : 'html',
   use: {
     baseURL: 'http://localhost:5173',
-    trace: 'on-first-retry',
+    trace: process.env.CI ? 'retain-on-failure' : 'on-first-retry',
     screenshot: 'only-on-failure',
     ...devices['Desktop Chrome'],
   },

@@ -59,11 +59,6 @@ jobs:
       - name: Seed local D1 database
         run: pnpm exec wrangler d1 execute qademo-db --local --file=./schema.sql
 
-      - name: Install Playwright OS dependencies
-        working-directory: apps/web
-        timeout-minutes: 5
-        run: pnpm exec playwright install-deps chromium
-
       - name: Install Playwright browsers
         working-directory: apps/web
         timeout-minutes: 10

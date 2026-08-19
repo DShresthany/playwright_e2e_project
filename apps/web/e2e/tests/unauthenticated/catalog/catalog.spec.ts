@@ -73,6 +73,5 @@ test.describe('Catalog', { tag: '@catalog' }, () => {
 
     await expect(page).toHaveURL(/\/catalog$/);
     await expect(catalogPage.catalogPage).toBeVisible();
-    await expect(true).toBe(false); // TODO: remove — trace smoke test
   });
 });

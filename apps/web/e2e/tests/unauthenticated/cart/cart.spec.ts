@@ -1,5 +1,6 @@
 // spec: specs/ecommerce-cart.md
 import { test, expect } from '../../../src/fixtures/base';
+import { requireEnvCredentials } from '../../../src/helpers/credentials';
 import type { CatalogCard } from '../../../src/pages/CatalogPage';
 
 test.describe('Cart', { tag: '@cart' }, () => {
@@ -38,6 +39,31 @@ test.describe('Cart', { tag: '@cart' }, () => {
     await test.step('Assert: redirected to login', async () => {
       await expect(page).toHaveURL(/\/login$/);
       await expect(loginPage.loginPage).toBeVisible();
+    });
+  });
+
+  test('guest-checkout-login-returns-to-checkout', { tag: ['@critical'] }, async ({ catalogPage, cartPage, loginPage, page }) => {
+    const { username, password } = requireEnvCredentials('STANDARD_USER', 'STANDARD_PASSWORD');
+    let card: CatalogCard;
+
+    await test.step('Arrange: seed cart and proceed to checkout as guest', async () => {
+      await catalogPage.goto();
+      card = await catalogPage.addEnabledProductToCart();
+      await catalogPage.cartLink.click();
+      await expect(cartPage.item(card.id), { message: 'Precondition Failed: seeded product should appear on /cart' }).toBeVisible();
+      await cartPage.checkoutButton.click();
+      await expect(page, { message: 'Precondition Failed: guest checkout should redirect to /login' }).toHaveURL(/\/login$/);
+      await expect(loginPage.loginPage).toBeVisible();
+    });
+
+    await test.step('Act: log in as standard user', async () => {
+      await loginPage.login(username, password);
+    });
+
+    await test.step('Assert: returned to checkout, not catalog', async () => {
+      await expect(page).toHaveURL(/\/checkout$/);
+      await expect(cartPage.checkoutPage).toBeVisible();
+      await expect(cartPage.checkoutHeading).toHaveText('Checkout');
     });
   });
 });

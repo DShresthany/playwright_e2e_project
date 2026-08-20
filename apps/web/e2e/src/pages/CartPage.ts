@@ -54,6 +54,10 @@ export class CartPage extends BasePage {
     return this.page.getByTestId(`cart-item-name-${id}`);
   }
 
+  itemImageLink(id: string): Locator {
+    return this.page.getByTestId(`cart-item-image-link-${id}`);
+  }
+
   itemPrice(id: string): Locator {
     return this.page.getByTestId(`cart-item-price-${id}`);
   }

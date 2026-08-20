@@ -272,4 +272,69 @@ test.describe('Cart', { tag: '@cart' }, () => {
       await expect(cartPage.cartBadge).toHaveCount(0);
     });
   });
+
+  test('cart-line-name-opens-pdp', { tag: ['@critical'] }, async ({ catalogPage, cartPage, productPage, page }) => {
+    let card: CatalogCard;
+
+    await test.step('Arrange: one line on /cart', async () => {
+      card = await catalogPage.addEnabledProductToCart();
+      await catalogPage.cartLink.click();
+      await expect(cartPage.item(card.id), { message: 'Precondition Failed: seeded product should appear on /cart' }).toBeVisible();
+    });
+
+    await test.step('Act: click cart line name', async () => {
+      await cartPage.itemName(card.id).click();
+    });
+
+    await test.step('Assert: PDP matches the cart line', async () => {
+      await expect(page).toHaveURL(/\/products\//);
+      await expect(productPage.productPage).toBeVisible();
+      await expect(productPage.name).toHaveText(card.name);
+      await expect(productPage.price).toHaveText(card.price);
+    });
+  });
+
+  test('cart-line-image-opens-pdp', { tag: ['@critical'] }, async ({ catalogPage, cartPage, productPage, page }) => {
+    let card: CatalogCard;
+
+    await test.step('Arrange: one line on /cart', async () => {
+      card = await catalogPage.addEnabledProductToCart();
+      await catalogPage.cartLink.click();
+      await expect(cartPage.item(card.id), { message: 'Precondition Failed: seeded product should appear on /cart' }).toBeVisible();
+    });
+
+    await test.step('Act: click cart line image', async () => {
+      await cartPage.itemImageLink(card.id).click();
+    });
+
+    await test.step('Assert: PDP matches the cart line', async () => {
+      await expect(page).toHaveURL(/\/products\//);
+      await expect(productPage.productPage).toBeVisible();
+      await expect(productPage.name).toHaveText(card.name);
+      await expect(productPage.price).toHaveText(card.price);
+    });
+  });
+
+  test('filled-cart-survives-reload', { tag: ['@critical'] }, async ({ catalogPage, cartPage, page }) => {
+    let card: CatalogCard;
+
+    await test.step('Arrange: add one in-stock product on catalog', async () => {
+      card = await catalogPage.addEnabledProductToCart();
+    });
+
+    await test.step('Act: reload catalog, then cart', async () => {
+      await page.reload();
+      await expect(catalogPage.inCartActions(card.id), { message: 'Precondition Failed: catalog In Cart should persist after reload' }).toBeVisible();
+      await catalogPage.cartLink.click();
+      await page.reload();
+    });
+
+    await test.step('Assert: cart line and badge persist', async () => {
+      await expect(page).toHaveURL(/\/cart$/);
+      await expect(cartPage.item(card.id)).toBeVisible();
+      await expect(cartPage.itemName(card.id)).toHaveText(card.name);
+      await expect(cartPage.itemQuantity(card.id)).toHaveText('1');
+      await expect(cartPage.cartBadge).toHaveText('1');
+    });
+  });
 });

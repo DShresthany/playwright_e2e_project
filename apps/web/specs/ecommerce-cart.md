@@ -51,7 +51,7 @@ Also in stock (enabled Add): Smart Watch `2`, Webcam `10`. OOS cards must not be
 | --- | --- |
 | Empty cart | `cart-page`, `cart-empty-state`, `cart-empty-heading`, `continue-shopping-button` |
 | Filled cart | `cart-heading`, `cart-item-count`, `clear-cart-button`, `cart-items-list` |
-| Line | `cart-item-{id}`, `cart-item-name-{id}`, `cart-item-price-{id}`, `cart-item-quantity-{id}`, `cart-item-subtotal-{id}`, `cart-item-quantity-controls-{id}`, `cart-item-increase-{id}`, `cart-item-decrease-{id}`, `cart-item-remove-{id}` |
+| Line | `cart-item-{id}`, `cart-item-name-{id}`, `cart-item-image-link-{id}`, `cart-item-price-{id}`, `cart-item-quantity-{id}`, `cart-item-subtotal-{id}`, `cart-item-quantity-controls-{id}`, `cart-item-increase-{id}`, `cart-item-decrease-{id}`, `cart-item-remove-{id}` |
 | Summary | `cart-order-summary`, `order-summary-heading`, `order-subtotal`, `order-shipping`, `order-total`, `proceed-to-checkout-button`, `continue-shopping-link-button` |
 | Navbar | `navbar-cart-link`, `navbar-cart-badge` |
 | Catalog arrange | `product-add-to-cart-{id}` |
@@ -108,7 +108,24 @@ Also in stock (enabled Add): Smart Watch `2`, Webcam `10`. OOS cards must not be
 
 **Expected assertions:**
 - URL is `/login`; `login-page` is visible.
-- Return intent toward checkout: React Router history state `usr.from.pathname` is `/checkout` (do not fill login).
+
+#### 1.4. guest-checkout-login-returns-to-checkout
+
+**Preconditions:**
+- Project `unauthenticated`.
+- Arrange independently (do not assume 1.3 already ran).
+- `STANDARD_USER` / `STANDARD_PASSWORD` available.
+
+**Steps:**
+1. Go to `/catalog`; click enabled `product-add-to-cart-{id}`.
+2. Open `/cart`; click `proceed-to-checkout-button`.
+3. Confirm `/login` is shown.
+4. Log in as `STANDARD_USER`.
+
+**Expected assertions:**
+- After login: URL is `/checkout`.
+- `checkout-page` is visible; `checkout-heading` is “Checkout”.
+- Do **not** fill or submit the checkout form.
 
 ### 2. Authenticated cart page (authenticated)
 
@@ -294,3 +311,46 @@ Also in stock (enabled Add): Smart Watch `2`, Webcam `10`. OOS cards must not be
 - Entire line is removed (quantity is **not** left at qty−1).
 - `cart-item-{id}` not visible; `cart-empty-state` visible (only product).
 - `navbar-cart-badge` not visible.
+
+#### 2.12. cart-line-name-opens-pdp
+
+**Preconditions:**
+- Project `authenticated`.
+- In this scenario: `clearCartViaApi`, Add one in-stock product from catalog card, open `/cart`.
+
+**Steps:**
+1. Arrange one line on `/cart`.
+2. Click `cart-item-name-{id}`.
+
+**Expected assertions:**
+- URL is a product PDP (`/products/...`).
+- `product-page` is visible.
+- PDP name and price match the cart line.
+
+#### 2.13. cart-line-image-opens-pdp
+
+**Preconditions:**
+- Same independent arrange as 2.12.
+
+**Steps:**
+1. Arrange one line on `/cart`.
+2. Click `cart-item-image-link-{id}`.
+
+**Expected assertions:**
+- Same as 2.12 (PDP matches the cart line).
+
+#### 2.14. filled-cart-survives-reload
+
+**Preconditions:**
+- Project `authenticated`.
+- In this scenario: `clearCartViaApi`, Add one in-stock product from catalog card.
+
+**Steps:**
+1. Add from catalog card (In Cart visible).
+2. Reload `/catalog`.
+3. Open `/cart` via navbar.
+4. Reload `/cart`.
+
+**Expected assertions:**
+- After catalog reload: `product-in-cart-actions-{id}` still visible.
+- After cart reload: `cart-item-{id}` visible; name matches; qty `1`; `navbar-cart-badge` is `1`.

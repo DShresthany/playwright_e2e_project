@@ -11,6 +11,10 @@ setup('authenticate as standard user', async ({ page }) => {
   await page.getByTestId('password-input').fill(password);
   await page.getByTestId('login-submit-button').click();
   await expect(page).toHaveURL(/\/catalog/);
+  await page.evaluate(() => {
+    localStorage.removeItem('session_id');
+    localStorage.removeItem('cart-storage');
+  });
   await page.context().storageState({ path: standardFile });
 });
 
@@ -21,5 +25,9 @@ setup('authenticate as admin user', async ({ page }) => {
   await page.getByTestId('password-input').fill(password);
   await page.getByTestId('login-submit-button').click();
   await expect(page).toHaveURL(/\/catalog/);
+  await page.evaluate(() => {
+    localStorage.removeItem('session_id');
+    localStorage.removeItem('cart-storage');
+  });
   await page.context().storageState({ path: adminFile });
 });

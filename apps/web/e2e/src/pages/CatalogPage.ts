@@ -144,6 +144,28 @@ export class CatalogPage extends BasePage {
   }
 
   /**
+   * Adds a specific catalog product by id. Arrangement only — waits for
+   * POST /cart/items so checkout/cart see the line. Returns visible card details.
+   */
+  async addProductToCart(productId: string): Promise<CatalogCard> {
+    await expect(this.addToCartButton(productId), {
+      message: `Precondition Failed: catalog Add should be enabled for product ${productId}`,
+    }).toBeEnabled();
+    const synced = this.page.waitForResponse(
+      (res) =>
+        res.url().includes('/cart/items') &&
+        res.request().method() === 'POST' &&
+        res.ok(),
+    );
+    await this.addToCartButton(productId).click();
+    await synced;
+    await expect(this.inCartActions(productId), {
+      message: `Precondition Failed: product ${productId} should show In Cart after Add`,
+    }).toBeVisible();
+    return this.cardDetails(productId);
+  }
+
+  /**
    * Clicks catalog-card Add for an enabled product. Arrangement only —
    * not a cart-page assertion.
    */

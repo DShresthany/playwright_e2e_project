@@ -3,12 +3,14 @@ import { LoginPage } from '../pages/LoginPage';
 import { CatalogPage } from '../pages/CatalogPage';
 import { ProductPage } from '../pages/ProductPage';
 import { CartPage } from '../pages/CartPage';
+import { CheckoutPage } from '../pages/CheckoutPage';
 
 type PageFixtures = {
   loginPage: LoginPage;
   catalogPage: CatalogPage;
   productPage: ProductPage;
   cartPage: CartPage;
+  checkoutPage: CheckoutPage;
 };
 
 export const test = base.extend<PageFixtures>({
@@ -23,6 +25,9 @@ export const test = base.extend<PageFixtures>({
   },
   cartPage: async ({ page }, use) => {
     await use(new CartPage(page));
+  },
+  checkoutPage: async ({ page }, use) => {
+    await use(new CheckoutPage(page));
   },
 });
 

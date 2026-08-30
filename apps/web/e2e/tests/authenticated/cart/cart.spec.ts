@@ -18,6 +18,7 @@ test.describe('Cart', { tag: '@cart' }, () => {
   });
 
   test('empty-cart-after-clear', { tag: ['@smoke', '@critical'] }, async ({ cartPage }) => {
+    expect(true).toBe(false);
     await cartPage.goto();
 
     await expect(cartPage.emptyState).toBeVisible();

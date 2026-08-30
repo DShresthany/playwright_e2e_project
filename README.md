@@ -4,6 +4,8 @@ A production-grade e-commerce application specifically designed for practicing a
 
 Built with modern technologies: React, Hono, and Cloudflare Workers with Static Assets + D1 + R2 + KV.
 
+**Playwright E2E:** [Run tests locally & CI overview](./docs/E2E.md) — full suite runs on every PR to `main`.
+
 ## 🚀 Live Demo
 
 **URL**: https://qademo.com
@@ -278,6 +280,8 @@ This makes QADemo ideal for testing monitoring and observability integrations in
 ---
 
 ## 🏃 Getting Started
+
+For **Playwright E2E** setup (env, D1 seed, `pnpm run test:e2e`), see **[docs/E2E.md](./docs/E2E.md)**.
 
 ### Prerequisites
 - Node.js 20+

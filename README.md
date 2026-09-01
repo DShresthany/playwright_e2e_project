@@ -13,7 +13,8 @@ This repo is a **portfolio fork** of [QADemo](https://qademo.com) (inspired by [
 | **What I built** | Playwright E2E framework: plans in `apps/web/specs/`, page objects / fixtures / helpers in `apps/web/e2e/`, auth setup with cart isolation for parallel runs, GitHub Actions CI, and branch protection for `main`. Specs and tests were authored with an AI-assisted explore / plan / generate / heal workflow (Cursor + Playwright CLI skills) |
 | **What I did not build** | The React / Hono / Cloudflare application (upstream QADemo) |
 
-Full runbook: **[docs/E2E.md](./docs/E2E.md)**.
+Full runbook: **[docs/E2E.md](./docs/E2E.md)**.  
+Upstream QADemo README (archived): **[docs/QADemo-original-README.md](./docs/QADemo-original-README.md)**.
 
 ## E2E framework highlights
 
@@ -92,6 +93,7 @@ Optional app docs (not part of the E2E framework):
 - [REST API documentation](./docs/REST-API-DOCUMENTATION.md)
 - [Postman collection](./docs/QADemo-Postman-Collection.json)
 - [FRD](./docs/FRD-QADemo.md)
+- [Original QADemo README (archived)](./docs/QADemo-original-README.md)
 
 ## License
 
